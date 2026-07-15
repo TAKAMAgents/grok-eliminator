@@ -511,7 +511,7 @@ impl CleanupEngine {
         {
             let _ = source;
             let _ = clean;
-            return Err(CleanupError::UnsupportedPlatform);
+            Err(CleanupError::UnsupportedPlatform)
         }
 
         #[cfg(unix)]
