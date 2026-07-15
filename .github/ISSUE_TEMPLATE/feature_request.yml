@@ -1,0 +1,39 @@
+name: Feature request
+description: Propose a local cleanup or audit improvement.
+title: "Feature: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What local cleanup or audit gap should this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the smallest behavior change that would solve it.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - Audit only
+        - Dry-run reporting
+        - Applied cleanup
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety considerations
+      description: How should this avoid deleting unrelated files or exposing secret values?
+    validations:
+      required: true

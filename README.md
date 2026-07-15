@@ -1,36 +1,126 @@
 # grok-eliminator
 
-`grok-eliminator` audits and removes the local Grok CLI installation from the
-current user's macOS, Linux, or Windows machine. It is deliberately local-only: it does not contact xAI,
-inspect API-key values, modify the signed cmux application, or delete source
-code and terminal history that merely mention Grok.
+Remove local Grok CLI files and local Grok API-key exports.
 
-## Usage
+This tool works on macOS, Linux, and Windows. It is local-only. It does not
+contact xAI.
 
-```text
-cargo install --path . --locked --root "$HOME/.local"
+## Fast Path
+
+If you came here after the posts below about reported malware-like code upload
+behavior, use this tool to remove local Grok CLI files from your computer.
+
+```sh
+git clone https://github.com/TAKAMAgents/grok-eliminator.git
+cd grok-eliminator
+cargo run -- audit
+cargo run -- remove
+cargo run -- remove --apply
+```
+
+Then restart your terminal and rotate external xAI credentials separately.
+
+## Install
+
+```sh
+git clone https://github.com/TAKAMAgents/grok-eliminator.git
+cd grok-eliminator
+cargo install --path . --locked
+```
+
+Or run it without installing:
+
+```sh
+cargo run -- audit
+```
+
+## Audit Only
+
+This only reports what was found. It does not remove anything.
+
+```sh
 grok-eliminator audit
+```
+
+## Preview Removal
+
+This shows what would be removed. It does not remove anything.
+
+```sh
 grok-eliminator remove
+```
+
+## Remove Grok Locally
+
+This applies the cleanup.
+
+```sh
 grok-eliminator remove --apply
 ```
 
-`audit` is read-only. `remove` previews actions unless `--apply` is supplied.
-Reports contain paths and status only; API-key values are never read into the
-report. Existing shells need `exec zsh` after an applied cleanup.
+## JSON Output
 
-The cleanup covers known Grok CLI paths, npm's actual global package root, the
-`@vibe-kit/grok-cli` package, `~/.grok`, `GROK_API_KEY`/`XAI_API_KEY` exports,
-macOS launchd variables, Windows user environment values, and cmux's
-macOS-only shell reachability. On platforms without a persistent environment
-store that the tool can safely edit, the report says `unavailable` and tells
-the user to restart after removing the profile export. Signed applications and
-unrelated source or terminal-history files are intentionally preserved.
-External xAI credentials must be rotated separately.
+```sh
+grok-eliminator --json audit
+```
 
-## Development
+```sh
+grok-eliminator --json remove --apply
+```
 
-```text
+## After Cleanup
+
+Restart your terminal.
+
+On macOS or Linux shells, you can use:
+
+```sh
+exec zsh
+```
+
+On Windows, close the terminal and open a new one.
+
+## What It Removes
+
+- Known `grok` executable links.
+- `~/.grok`.
+- Global npm files for `@vibe-kit/grok-cli`.
+- `GROK_API_KEY` and `XAI_API_KEY` exports from common shell profiles.
+- macOS launchd variables when available.
+- Windows user environment values when available.
+- Grok access from cmux shells on macOS, without editing `/Applications/cmux.app`.
+
+## What It Does Not Do
+
+- It does not contact xAI.
+- It does not revoke or rotate remote xAI credentials.
+- It does not print API-key values.
+- It does not edit signed application bundles.
+- It does not delete source code or shell history only because they mention Grok.
+
+Rotate external xAI credentials separately if they may have been exposed.
+
+## Background
+
+- Hari Krishnan, July 13, 2026:
+  <https://x.com/hrkrshnn/status/2076716354754015368>
+- Peter Dedene, July 12, 2026:
+  <https://x.com/dedene/status/2076394152779301305>
+- The Verge, July 14, 2026:
+  <https://www.theverge.com/ai-artificial-intelligence/965600/spacexai-grok-build-repository-upload>
+
+## Developer Checks
+
+```sh
 cargo fmt --check
 cargo test
 cargo clippy --all-targets --all-features -- -D warnings
 ```
+
+## More
+
+- [Design notes](docs/design.md)
+- [Open source checklist](docs/OPEN_SOURCE_CHECKLIST.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security](SECURITY.md)
+- [License](LICENSE)

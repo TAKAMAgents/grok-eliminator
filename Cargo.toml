@@ -2,9 +2,13 @@
 name = "grok-eliminator"
 version = "0.1.0"
 edition = "2024"
-description = "Audit and remove Grok CLI artifacts from a local macOS workstation"
+rust-version = "1.85"
+description = "Audit and remove local Grok CLI artifacts without exposing credential values"
 license = "MIT"
+readme = "README.md"
 repository = "https://github.com/TAKAMAgents/grok-eliminator"
+keywords = ["grok", "xai", "cli", "cleanup", "credentials"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }
