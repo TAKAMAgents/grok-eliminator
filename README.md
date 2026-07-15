@@ -2,83 +2,74 @@
 
 Remove local Grok CLI files and local Grok API-key exports.
 
-This tool works on macOS, Linux, and Windows. It is local-only. It does not
-contact xAI.
+Works on macOS, Linux, and Windows. Local-only. Does not contact xAI.
 
-## Fast Path
+It does not revoke remote xAI credentials. Rotate external xAI credentials
+separately if they may have been exposed.
 
-If you came here after the posts below about reported malware-like code upload
-behavior, use this tool to remove local Grok CLI files from your computer.
+## Install Latest Binary
+
+macOS or Linux:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/TAKAMAgents/grok-eliminator/main/scripts/install-release.sh | sh
+```
+
+Windows PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/TAKAMAgents/grok-eliminator/main/scripts/install-release.ps1 | iex
+```
+
+Manual downloads are on the [latest release page](https://github.com/TAKAMAgents/grok-eliminator/releases/latest).
+
+## Use
+
+First audit and preview:
+
+```sh
+grok-eliminator audit
+grok-eliminator remove
+```
+
+Apply cleanup only when ready:
+
+```sh
+grok-eliminator remove --apply
+```
+
+Restart your terminal after cleanup.
+
+## Build From Source
+
+Requires Rust and Cargo.
 
 ```sh
 git clone https://github.com/TAKAMAgents/grok-eliminator.git
 cd grok-eliminator
 cargo run -- audit
 cargo run -- remove
+```
+
+Apply cleanup only when ready:
+
+```sh
 cargo run -- remove --apply
 ```
 
-Then restart your terminal and rotate external xAI credentials separately.
-
-## Install
-
-```sh
-git clone https://github.com/TAKAMAgents/grok-eliminator.git
-cd grok-eliminator
-cargo install --path . --locked
-```
-
-Or run it without installing:
-
-```sh
-cargo run -- audit
-```
-
-## Audit Only
-
-This only reports what was found. It does not remove anything.
+## Commands
 
 ```sh
 grok-eliminator audit
-```
-
-## Preview Removal
-
-This shows what would be removed. It does not remove anything.
-
-```sh
 grok-eliminator remove
-```
-
-## Remove Grok Locally
-
-This applies the cleanup.
-
-```sh
 grok-eliminator remove --apply
-```
-
-## JSON Output
-
-```sh
 grok-eliminator --json audit
 ```
 
-```sh
-grok-eliminator --json remove --apply
-```
-
-## After Cleanup
-
-Restart your terminal.
-
-On macOS or Linux shells, you can use:
-
-```sh
-exec zsh
-```
-
-On Windows, close the terminal and open a new one.
+- `audit` reports what was found.
+- `remove` previews what would be removed.
+- `remove --apply` applies cleanup.
+- Reports show paths and status only. They do not print API-key values.
 
 ## What It Removes
 
@@ -98,8 +89,6 @@ On Windows, close the terminal and open a new one.
 - It does not edit signed application bundles.
 - It does not delete source code or shell history only because they mention Grok.
 
-Rotate external xAI credentials separately if they may have been exposed.
-
 ## Background
 
 - Hari Krishnan, July 13, 2026:
@@ -116,6 +105,15 @@ cargo fmt --check
 cargo test
 cargo clippy --all-targets --all-features -- -D warnings
 ```
+
+## Publish a Release
+
+```sh
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+GitHub Actions will build release binaries and attach them to the release.
 
 ## More
 
